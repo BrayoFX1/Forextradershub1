@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ForexTradersHub – Trade Smarter</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --gold: #c9a84c;
+      --gold-light: #e8c96a;
+      --gold-dim: #7a6030;
+      --dark: #080a0e;
+      --dark2: #0e1117;
+      --dark3: #141820;
+      --dark4: #1c2230;
+      --text: #d4dce8;
+      --text-dim: #6b7894;
+      --green: #00e676;
+      --red: #ff3d57;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--dark);
+      color: var(--text);
+      font-family: 'DM Sans', sans-serif;
+      overflow-x: hidden;
+    }
+
+    /* ── NOISE OVERLAY ── */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.35;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1.1rem 2rem;
+      background: rgba(8,10,14,0.85);
+      backdrop-filter: blur(14px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+    }
+
+    .logo {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.6rem;
+      letter-spacing: 2px;
+      color: var(--gold);
+    }
+    .logo span { color: var(--text); }
+
+    nav ul {
+      display: flex;
+      gap: 2rem;
+      list-style: none;
+    }
+
+    nav ul a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+      transition: color 0.2s;
+    }
+    nav ul a:hover { color: var(--gold); }
+
+    .nav-cta {
+      background: var(--gold);
+      color: #000 !important;
+      padding: 0.45rem 1.2rem;
+      border-radius: 4px;
+      font-weight: 600 !important;
+      transition: background 0.2s !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; color: #000 !important; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 7rem 2rem 4rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(201,168,76,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(201,168,76,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 80% 60% at 50% 50%, black 30%, transparent 100%);
+    }
+
+    .hero-glow {
+      position: absolute;
+      width: 600px; height: 600px;
+      background: radial-gradient(circle, rgba(201,168,76,0.12) 0%, transparent 70%);
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+    }
+
+    .hero-content { position: relative; z-index: 2; max-width: 820px; }
+
+    .hero-badge {
+      display: inline-block;
+      border: 1px solid var(--gold-dim);
+      color: var(--gold);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 2px;
+      padding: 0.35rem 1rem;
+      border-radius: 2px;
+      margin-bottom: 1.8rem;
+      animation: fadeUp 0.8s ease both;
+    }
+
+    .hero h1 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(3.5rem, 10vw, 7rem);
+      line-height: 0.95;
+      letter-spacing: 2px;
+      color: #fff;
+      margin-bottom: 1.5rem;
+      animation: fadeUp 0.8s 0.1s ease both;
+    }
+
+    .hero h1 em {
+      font-style: normal;
+      color: var(--gold);
+    }
+
+    .hero p {
+      font-size: 1.05rem;
+      color: var(--text-dim);
+      max-width: 520px;
+      margin: 0 auto 2.5rem;
+      line-height: 1.7;
+      font-weight: 300;
+      animation: fadeUp 0.8s 0.2s ease both;
+    }
+
+    .hero-btns {
+      display: flex;
+      gap: 1rem;
+      justify-content: center;
+      flex-wrap: wrap;
+      animation: fadeUp 0.8s 0.3s ease both;
+    }
+
+    .btn-primary {
+      background: var(--gold);
+      color: #000;
+      padding: 0.85rem 2.2rem;
+      border-radius: 4px;
+      font-weight: 600;
+      font-size: 0.9rem;
+      text-decoration: none;
+      letter-spacing: 0.5px;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-2px); }
+
+    .btn-outline {
+      border: 1px solid rgba(201,168,76,0.4);
+      color: var(--gold);
+      padding: 0.85rem 2.2rem;
+      border-radius: 4px;
+      font-weight: 500;
+      font-size: 0.9rem;
+      text-decoration: none;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .btn-outline:hover { border-color: var(--gold); background: rgba(201,168,76,0.07); }
+
+    /* ── TICKER ── */
+    .ticker-wrap {
+      background: var(--dark2);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      border-bottom: 1px solid rgba(201,168,76,0.12);
+      overflow: hidden;
+      padding: 0.65rem 0;
+    }
+
+    .ticker {
+      display: flex;
+      gap: 3rem;
+      animation: ticker 30s linear infinite;
+      width: max-content;
+    }
+
+    .tick-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      white-space: nowrap;
+    }
+
+    .tick-pair { color: var(--text-dim); }
+    .tick-price { color: var(--text); font-weight: 600; }
+    .tick-up { color: var(--green); }
+    .tick-down { color: var(--red); }
+
+    @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+    /* ── SECTIONS SHARED ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 1100px; margin: 0 auto; }
+
+    .section-label {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.7rem;
+      letter-spacing: 3px;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 0.8rem;
+    }
+
+    .section-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(2.2rem, 5vw, 3.5rem);
+      letter-spacing: 1px;
+      color: #fff;
+      line-height: 1;
+      margin-bottom: 1rem;
+    }
+
+    .section-sub {
+      color: var(--text-dim);
+      font-size: 0.95rem;
+      max-width: 500px;
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── STATS ── */
+    .stats {
+      background: var(--dark2);
+      border-top: 1px solid rgba(201,168,76,0.1);
+      border-bottom: 1px solid rgba(201,168,76,0.1);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+      gap: 0;
+    }
+
+    .stat-item {
+      padding: 2.5rem 2rem;
+      text-align: center;
+      border-right: 1px solid rgba(201,168,76,0.1);
+    }
+    .stat-item:last-child { border-right: none; }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 3rem;
+      color: var(--gold);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      margin-top: 0.4rem;
+      letter-spacing: 0.5px;
+    }
+
+    /* ── FEATURES ── */
+    .features-header { margin-bottom: 3.5rem; }
+
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.5px;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.1);
+    }
+
+    .feature-card {
+      background: var(--dark2);
+      padding: 2.2rem;
+      transition: background 0.25s;
+    }
+    .feature-card:hover { background: var(--dark3); }
+
+    .feature-icon {
+      font-size: 1.8rem;
+      margin-bottom: 1.2rem;
+    }
+
+    .feature-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1.3rem;
+      letter-spacing: 1px;
+      color: #fff;
+      margin-bottom: 0.6rem;
+    }
+
+    .feature-text {
+      font-size: 0.88rem;
+      color: var(--text-dim);
+      line-height: 1.7;
+      font-weight: 300;
+    }
+
+    /* ── SIGNALS ── */
+    .signals-section { background: var(--dark2); }
+
+    .signals-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 2.5rem;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .signals-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 1rem;
+    }
+
+    .signal-card {
+      background: var(--dark3);
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 6px;
+      padding: 1.5rem;
+      position: relative;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+    }
+    .signal-card:hover { border-color: rgba(201,168,76,0.35); transform: translateY(-3px); }
+
+    .signal-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .signal-card.buy::before { background: var(--green); }
+    .signal-card.sell::before { background: var(--red); }
+
+    .signal-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    .signal-pair {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+    }
+
+    .signal-badge {
+      font-size: 0.65rem;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      padding: 0.25rem 0.6rem;
+      border-radius: 3px;
+    }
+    .badge-buy { background: rgba(0,230,118,0.15); color: var(--green); }
+    .badge-sell { background: rgba(255,61,87,0.15); color: var(--red); }
+
+    .signal-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.45rem;
+      font-size: 0.8rem;
+    }
+    .signal-row span:first-child { color: var(--text-dim); }
+    .signal-row span:last-child { font-family: 'JetBrains Mono', monospace; color: var(--text); }
+
+    .signal-pips {
+      margin-top: 1rem;
+      padding-top: 1rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    /* ── EDUCATION ── */
+    .edu-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+      margin-top: 3rem;
+    }
+
+    .edu-card {
+      border: 1px solid rgba(255,255,255,0.06);
+      border-radius: 6px;
+      overflow: hidden;
+      transition: border-color 0.25s, transform 0.25s;
+      cursor: pointer;
+    }
+    .edu-card:hover { border-color: rgba(201,168,76,0.3); transform: translateY(-3px); }
+
+    .edu-thumb {
+      height: 130px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 3rem;
+    }
+
+    .edu-card:nth-child(1) .edu-thumb { background: linear-gradient(135deg, #0e1117, #1c2230); }
+    .edu-card:nth-child(2) .edu-thumb { background: linear-gradient(135deg, #0e1a12, #0e2010); }
+    .edu-card:nth-child(3) .edu-thumb { background: linear-gradient(135deg, #1a0e0e, #200e10); }
+    .edu-card:nth-child(4) .edu-thumb { background: linear-gradient(135deg, #15100e, #1a1408); }
+
+    .edu-body { padding: 1.3rem; }
+
+    .edu-tag {
+      font-size: 0.65rem;
+      letter-spacing: 1.5px;
+      color: var(--gold);
+      text-transform: uppercase;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+    }
+
+    .edu-title {
+      font-size: 0.92rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 0.4rem;
+    }
+
+    .edu-desc {
+      font-size: 0.8rem;
+      color: var(--text-dim);
+      line-height: 1.6;
+    }
+
+    /* ── CTA ── */
+    .cta-section {
+      background: var(--dark2);
+      text-align: center;
+      border-top: 1px solid rgba(201,168,76,0.1);
+    }
+
+    .cta-box {
+      max-width: 600px;
+      margin: 0 auto;
+    }
+
+    .cta-box .section-title { margin-bottom: 1rem; }
+
+    .cta-input-row {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 2rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+
+    .cta-input {
+      flex: 1;
+      min-width: 200px;
+      background: var(--dark3);
+      border: 1px solid rgba(201,168,76,0.2);
+      color: var(--text);
+      padding: 0.8rem 1.2rem;
+      border-radius: 4px;
+      font-size: 0.9rem;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+      transition: border-color 0.2s;
+    }
+    .cta-input:focus { border-color: var(--gold); }
+    .cta-input::placeholder { color: var(--text-dim); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--dark);
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 3rem 2rem 2rem;
+    }
+
+    .footer-grid {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    .footer-brand p {
+      font-size: 0.85rem;
+      color: var(--text-dim);
+      margin-top: 0.8rem;
+      line-height: 1.7;
+      font-weight: 300;
+      max-width: 260px;
+    }
+
+    .footer-col h4 {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 1rem;
+      letter-spacing: 1px;
+      color: var(--gold);
+      margin-bottom: 1rem;
+    }
+
+    .footer-col ul { list-style: none; }
+    .footer-col ul li { margin-bottom: 0.6rem; }
+    .footer-col ul a {
+      color: var(--text-dim);
+      text-decoration: none;
+      font-size: 0.85rem;
+      transition: color 0.2s;
+    }
+    .footer-col ul a:hover { color: var(--gold); }
+
+    .footer-bottom {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding-top: 1.5rem;
+      border-top: 1px solid rgba(255,255,255,0.05);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+    }
+
+    .footer-bottom p {
+      font-size: 0.78rem;
+      color: var(--text-dim);
+    }
+
+    .disclaimer {
+      font-size: 0.72rem;
+      color: #3d4555;
+      margin-top: 1.5rem;
+      line-height: 1.6;
+      text-align: center;
+      max-width: 1100px;
+      margin: 1.5rem auto 0;
+    }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 768px) {
+      nav ul { display: none; }
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+      .stat-item { border-right: none; border-bottom: 1px solid rgba(201,168,76,0.1); }
+    }
+
+    @media (max-width: 480px) {
+      .footer-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="logo">Forex<span>Traders</span>Hub</div>
+  <ul>
+    <li><a href="#features">Features</a></li>
+    <li><a href="#signals">Signals</a></li>
+    <li><a href="#education">Education</a></li>
+    <li><a href="#join" class="nav-cta">Join Free</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-content">
+    <div class="hero-badge">🟢 LIVE · MARKET OPEN</div>
+    <h1>Trade The<br/><em>Forex Market</em><br/>With Edge</h1>
+    <p>Professional signals, real-time analysis, and a community of traders dedicated to consistent profitability in the global currency markets.</p>
+    <div class="hero-btns">
+      <a href="#join" class="btn-primary">Get Free Signals</a>
+      <a href="#features" class="btn-outline">How It Works</a>
+    </div>
+  </div>
+</section>
+
+<!-- TICKER -->
+<div class="ticker-wrap">
+  <div class="ticker">
+    <!-- Repeated for seamless loop -->
+    <div class="tick-item"><span class="tick-pair">EUR/USD</span><span class="tick-price">1.08342</span><span class="tick-up">▲ +0.12%</span></div>
+    <div class="tick-item"><span class="tick-pair">GBP/USD</span><span class="tick-price">1.26718</span><span class="tick-down">▼ -0.08%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/JPY</span><span class="tick-price">149.542</span><span class="tick-up">▲ +0.21%</span></div>
+    <div class="tick-item"><span class="tick-pair">AUD/USD</span><span class="tick-price">0.65231</span><span class="tick-down">▼ -0.05%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/CAD</span><span class="tick-price">1.36478</span><span class="tick-up">▲ +0.09%</span></div>
+    <div class="tick-item"><span class="tick-pair">EUR/GBP</span><span class="tick-price">0.85492</span><span class="tick-up">▲ +0.04%</span></div>
+    <div class="tick-item"><span class="tick-pair">NZD/USD</span><span class="tick-price">0.59871</span><span class="tick-down">▼ -0.11%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/CHF</span><span class="tick-price">0.89134</span><span class="tick-up">▲ +0.07%</span></div>
+    <!-- Duplicate for seamless scroll -->
+    <div class="tick-item"><span class="tick-pair">EUR/USD</span><span class="tick-price">1.08342</span><span class="tick-up">▲ +0.12%</span></div>
+    <div class="tick-item"><span class="tick-pair">GBP/USD</span><span class="tick-price">1.26718</span><span class="tick-down">▼ -0.08%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/JPY</span><span class="tick-price">149.542</span><span class="tick-up">▲ +0.21%</span></div>
+    <div class="tick-item"><span class="tick-pair">AUD/USD</span><span class="tick-price">0.65231</span><span class="tick-down">▼ -0.05%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/CAD</span><span class="tick-price">1.36478</span><span class="tick-up">▲ +0.09%</span></div>
+    <div class="tick-item"><span class="tick-pair">EUR/GBP</span><span class="tick-price">0.85492</span><span class="tick-up">▲ +0.04%</span></div>
+    <div class="tick-item"><span class="tick-pair">NZD/USD</span><span class="tick-price">0.59871</span><span class="tick-down">▼ -0.11%</span></div>
+    <div class="tick-item"><span class="tick-pair">USD/CHF</span><span class="tick-price">0.89134</span><span class="tick-up">▲ +0.07%</span></div>
+  </div>
+</div>
+
+<!-- STATS -->
+<section class="stats">
+  <div class="container">
+    <div class="stats-grid">
+      <div class="stat-item"><div class="stat-num">12K+</div><div class="stat-label">Active Traders</div></div>
+      <div class="stat-item"><div class="stat-num">87%</div><div class="stat-label">Signal Win Rate</div></div>
+      <div class="stat-item"><div class="stat-num">5+</div><div class="stat-label">Years Experience</div></div>
+      <div class="stat-item"><div class="stat-num">24/7</div><div class="stat-label">Market Coverage</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="features">
+  <div class="container">
+    <div class="features-header">
+      <div class="section-label">Why Choose Us</div>
+      <div class="section-title">Everything You Need<br/>To Trade Profitably</div>
+      <p class="section-sub">From beginner-friendly education to professional-grade signals, we have the tools to level up your trading.</p>
+    </div>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">📡</div>
+        <div class="feature-title">Live Trading Signals</div>
+        <p class="feature-text">Receive precise entry, stop-loss, and take-profit levels in real time — across major, minor, and exotic pairs.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📊</div>
+        <div class="feature-title">Technical Analysis</div>
+        <p class="feature-text">Daily chart breakdowns covering key support/resistance, trend direction, and high-p
